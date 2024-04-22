@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  usercontrol.api.authenticacao:
+    image: ${DOCKER_REGISTRY-}usercontrolapiauthenticacao
+    container_name: usercontrol.api.authenticacao
+    depends_on: 
+        - "usercontrol.database"
+    build:
+      context: UserControl.Api
+      dockerfile: Dockerfile
+    ports:
+        - "4000:4000"
+        - "4001:4001"
+
+  usercontrol.database:
+    image:  postgres:latest
+    container_name: usercontrol.database
+    environment:
+    - POSTGRES_DB=UserControl
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+        - 5432:5433
+    restart: always
+volumes:
+  pgdata: 

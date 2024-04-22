@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using NetDevPack.Identity.Jwt;
 using System.Reflection;
+using UserControl.Api.Authenticacao.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddIdentityEntityFrameworkContextConfiguration(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Database"),
     b => b.MigrationsAssembly("UserControl.Api.Authenticacao")));
 
 builder.Services.AddJwtConfiguration(builder.Configuration, appJwtSettingsKey: "AppSettings");
@@ -36,7 +37,7 @@ builder.Services.AddSwaggerGen
         {
             Title = "Api Authentication for Motorcycle Rental and Delivery",
             Version = "v1",
-            Contact = new OpenApiContact() { Name="David", Email = "caballero.david2011@gmail.com" }
+            Contact = new OpenApiContact() { Name = "David", Email = "caballero.david2011@gmail.com" }
         });
         c.IncludeXmlComments(xmlPath);
         c.AddSecurityDefinition(
@@ -55,17 +56,16 @@ builder.Services.AddSwaggerGen
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
 
-}
+app.UseDeveloperExceptionPage();
+
 app.UseSwagger();
 
 app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
     });
+app.ApplyMigrations();
 
 app.UseHttpsRedirection();
 
