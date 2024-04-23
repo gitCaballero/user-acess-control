@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using NetDevPack.Identity.Jwt;
 using System.Reflection;
@@ -12,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddIdentityEntityFrameworkContextConfiguration(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Database"),
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Connection"),
     b => b.MigrationsAssembly("UserControl.Api.Authenticacao")));
 
 builder.Services.AddJwtConfiguration(builder.Configuration, appJwtSettingsKey: "AppSettings");
